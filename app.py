@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import tensorflow as tf
+from PIL import Image
 
 
 # Load Saved Objects in a Cached Function
@@ -25,21 +26,27 @@ st.write("Upload an image to classify it.")
 # User Inputs
 
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+if uploaded_file is not None:
+    image = Image.open(uploaded_file).convert("RGB")
+    st.image(image, caption="Uploaded Image", use_container_width=True)
+    st.write("")
+    st.write("Classifying...")
 
-
-image =  np.reshape(uploaded_file, ( 32, 32))
+    image = image.resize((32, 32,))
+    image = np.array(image)
+    image = image.astype(np.float32) / 255.0
+    image = np.expand_dims(image, axis=0)  # Add batch dimension
 # Prediction
 
 if st.button("Predict"):
     if uploaded_file is not None:
                 prediction = model.predict(image)
- 
+                st.success(
+                        f" {class_dist[np.argmax(prediction)]}"
+                    )
+    else:
+        st.warning("Please upload an image file to make a prediction.")
 
 
 
-
-
-# Display Prediction
-    st.success(
-        f" {class_dist[np.argmax(prediction)]}"
-    )
+   
