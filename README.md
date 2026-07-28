@@ -42,7 +42,7 @@ pip install -r requirements.txt
 ### Run Streamlit Application
 
 ```bash
-streamlit run streamlit_app.py
+streamlit run app.py
 ```
 
 ### Open Browser
